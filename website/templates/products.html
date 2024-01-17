@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Products{% endblock title %}
+
+{% block body %}
+    <body class="sub_page">
+        <div class="search-bar">
+            <form id="search-form">
+                <input type="text" id="search-input" placeholder="Search products">
+                <button type="button" onclick="searchProducts()">Search</button>
+            </form>
+        </div>
+
+        <ul class="product-list">
+            {% for product in products %}
+                <div class="product-card" data-product-name="{{ product.name | lower }}">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }} Image">
+                    {% elif product.image_path %}
+                        <img src="{{ url_for('static', filename=product.image_path) }}" alt="{{ product.name }} Image">
+                    {% else %}
+                        <p class="no-image">Image Not Found</p>
+                    {% endif %}
+                    <div class="product-details">
+                        <h3>{{ product.name }}</h3>
+                        <p class="price">Price: ${{ product.price }}</p>
+                        <button class="add-to-cart-btn" onclick="addToCart('{{ product.name }}', '{{ product.image_url }}', '{{ product.price }}')">
+                            Add To Cart
+                        </button>
+                    </div>
+                </div>
+
+                {% if loop.index % 4 == 0 %}
+                    </ul><ul class="product-list">
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </body>
+
+    <script>
+        async function searchProducts() {
+            const searchTerm = document.getElementById('search-input').value;
+            const productCards = document.querySelectorAll('.product-card');
+
+            productCards.forEach((card) => {
+                const productName = card.dataset.productName;
+                const shouldDisplay = productName.includes(searchTerm.toLowerCase());
+
+                card.style.display = shouldDisplay ? 'block' : 'none';
+            });
+        }
+
+        async function addToCart(name, imageUrl, price) {
+            const data = { name, imageUrl, price };
+            const response = await fetch('/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                // JavaScript tarafında kullanıcıya bildirim gösterme
+                alert(`${data.name} added to cart!`);
+
+                // Sepet sayfasına yönlendir
+                window.location.href = '/products';
+            } else {
+                console.error('Could not add to cart:', response.statusText);
+            }
+        }
+    </script>
+{% endblock body %}

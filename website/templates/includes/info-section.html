@@ -1,0 +1,89 @@
+
+  <!-- info section -->
+  <section class="info_section ">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-lg-3">
+          <div class="info_contact">
+            <h5>
+              CONTACT INFO
+            </h5>
+            <div>
+              <img src="{{ url_for('static', filename='images/call.png') }}" alt="Dynamic Image">
+              <p>
+                +01 1234567890
+              </p>
+            </div>
+            <div>
+              <img src="{{ url_for('static', filename='images/mail.png') }}" alt="Mail Image">
+              <p>
+                demo@gmail.com
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="info_time">
+            <h5>
+              Opening Hours Shop
+            </h5>
+            <div>
+              <p>
+                Monday to friday
+              </p>
+            </div>
+            <div>
+              <p>
+                07:00 am to 04:00 pm
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="info_social">
+            <h5>
+              social media
+            </h5>
+            <div class="social_container">
+              <div>
+                <a href="https://www.facebook.com/groups/PythonTurkiye/">
+                  <img src="{{ url_for('static', filename='images/fb.png') }}" alt="Mail Image">
+                </a>
+              </div>
+              <div>
+                <a href="https://twitter.com/ThePSF">
+                  <img src="{{ url_for('static', filename='images/twitter.png') }}" alt="Twitter Image">
+                </a>
+              </div>
+              <div>
+                <a href="https://www.linkedin.com/in/emre-beraat-samuk-a50b37250/">
+                  <img src="{{ url_for('static', filename='images/linkedin.png') }}" alt="linkedin Image">
+                </a>
+              </div>
+              <div>
+                <a href="https://www.instagram.com/python.ogreniyorum/">
+                  <img src="{{ url_for('static', filename='images/instagram.png') }}" alt="instagram Image">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="info_form pl-lg-4">
+            <h5>
+              Newsletter
+            </h5>
+            <form action="{{ url_for('auth.subscribe') }}" method="post">
+              <input type="email" name="email" placeholder="Enter Your Email" required />
+              <button type="submit">
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>        
+      </div>
+    </div>
+  </section>
+
+  <!-- end info_section -->

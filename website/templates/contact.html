@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact{% endblock title %}
+    
+{% block body %}
+
+<body class="sub_page">
+
+    
+  <!-- contact section -->
+
+  <section class="contact_section layout_padding-top">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-5 offset-md-1">
+          <div class="form_container">
+            <div class="heading_container">
+              <img src="{{ url_for('static', filename='images/heading-img.png') }}" alt="">
+              <h2>
+                Request A Call Back
+              </h2>
+              <p>
+                It is a long established fact that a reader will be distracted by the
+              </p>
+            </div>
+            <form action="{{ url_for('auth.request_callback') }}" method="post">
+              <div>
+                <input type="text" name="full_name" placeholder="Full Name" required />
+              </div>
+              <div>
+                <input type="text" name="phone_number" placeholder="Phone number" required />
+              </div>
+              <div>
+                <input type="email" name="email" placeholder="Email" required />
+              </div>
+              <div>
+                <input type="text" name="message" class="message-box" placeholder="Message" />
+              </div>
+              <div class="d-flex">
+                <button type="submit">SEND</button>
+              </div>
+            </form>            
+          </div>
+        </div>
+        <div class="col-md-6 px-0">
+          <div class="map_container">
+            <div class="map-responsive">
+              <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc&q=Eiffel+Tower+Paris+France" width="600" height="300" frameborder="0" style="border:0; width: 100%; height:100%" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end contact section -->
+
+</body>
+
+{% endblock body %}

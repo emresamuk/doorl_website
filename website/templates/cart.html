@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<body class="sub_page">
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="cart-header text-center">
+                    <h1>Your Cart</h1>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="cart-container">
+                    {% for cart_item in cart_items %}
+                        <div class="cart-item">
+                            <div class="cart-item-details">
+                                {% if cart_item.image_url %}
+                                    <img class="cart-item-image" src="{{ cart_item.image_url }}" alt="{{ cart_item.name }} Image">
+                                {% elif cart_item.image_path %}
+                                    <img class="cart-item-image" src="{{ url_for('static', filename=cart_item.image_path) }}" alt="{{ cart_item.name }} Image">
+                                {% endif %}
+                                <div class="cart-item-info">
+                                    <h3>{{ cart_item.name }}</h3>
+                                    <p class="cart-item-price">Price: {{ cart_item.price }} $</p>
+                                    <button class="remove-from-cart-btn" onclick="removeFromCart('{{ cart_item.name }}', '{{ cart_item.image_url }}', '{{ cart_item.price }}')">
+                                        X
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if loop.index % 3 == 0 %}
+                            </div><div class="cart-container">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Toplam ücret ve ürün listesi gösteren alan -->
+            <div class="col-md-4">
+                <div class="total-details-container">
+                    <div class="product-list-container">
+                        <h2>Product List</h2>
+                        <div id="product-list"></div>
+                    </div>
+                    <div class="total-price-container">
+                        <h2>Total Price</h2>
+                        <div id="total-price"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .cart-header {
+            background-color: #e7d619;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 30px;
+            margin-bottom: 20px;
+        }
+
+        .cart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .cart-item {
+            width: calc(30% - 10px); /* 3 ürünü bir satıra sığdırmak için genişliği hesaplayın */
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .cart-item:hover {
+            transform: scale(1.05);
+        }
+
+        .cart-item-details {
+            padding: 15px;
+        }
+
+        .cart-item-image {
+            width: 100%;
+            height: auto;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .cart-item-info {
+            text-align: center;
+        }
+
+        .cart-item-info h3 {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            font-size: 14px;
+            color: #007bff;
+        }
+
+        .remove-from-cart-btn {
+            background-color: #dc3545;
+            color: #ffffff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .total-details-container {
+            margin-top: 20px;
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .product-list-container,
+        .total-price-container {
+            margin-top: 20px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .product-list-container,
+        .total-price-container {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .product-list-container {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .total-price-container {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #28a745;
+        }
+    </style>
+
+    <script>
+        async function removeFromCart(name, imageUrl, price) {
+            const data = { name, imageUrl, price };
+            const response = await fetch('/remove_from_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                console.log('Product removed from cart:', data);
+                // Reload the page
+                window.location.reload();
+            } else {
+                console.error('Product could not be removed from cart:', response.statusText);
+            }
+        }
+
+        // Toplam ücreti hesapla ve göster
+        function updateTotalPrice() {
+            const cartItems = document.querySelectorAll('.cart-item-price');
+            let totalPrice = 0;
+
+            cartItems.forEach(item => {
+                const price = parseFloat(item.textContent.replace('Price: ', '').replace(' $', ''));
+                totalPrice += price;
+            });
+
+            // Toplam ücreti gösteren elemente yaz
+            const totalPriceElement = document.getElementById('total-price');
+            totalPriceElement.textContent = `Total Price: ${totalPrice.toFixed(2)} $`;
+        }
+
+        // Ürün listesini oluştur ve göster
+        function updateProductList() {
+            const cartItems = document.querySelectorAll('.cart-item-info h3');
+            let productList = '';
+
+            cartItems.forEach(item => {
+                const productName = item.textContent;
+                const productPriceElement = item.nextElementSibling;
+                const productPrice = parseFloat(productPriceElement.textContent.replace('Price: ', '').replace(' $', ''));
+                productList += `${productName} = ${productPrice.toFixed(2)} $<br>`;
+            });
+
+            // Ürün listesini gösteren elemente yaz
+            const productListElement = document.getElementById('product-list');
+            productListElement.innerHTML = productList;
+        }
+
+        // Sayfa yüklendiğinde toplam ücreti ve ürün listesini güncelle
+        window.onload = function () {
+            updateProductList();
+            updateTotalPrice();
+        };
+    </script>
+
+</body>
+
+{% endblock body %}
+
+

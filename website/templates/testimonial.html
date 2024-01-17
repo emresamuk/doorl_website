@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ececec;
+        }
+
+        .container-xxl {
+            padding: 5% 0;
+        }
+
+        h2,
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .testimonial-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .testimonial-form,
+        .testimonial-carousel {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .testimonial-form {
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto; /* Center the form */
+        }
+
+        .testimonial-form label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .testimonial-form input,
+        .testimonial-form textarea,
+        .testimonial-form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .testimonial-form button {
+            background-color: #e7d619;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .testimonial-form button:hover {
+            background-color: #9c9008;
+        }
+
+        .testimonial-carousel {
+            position: relative;
+        }
+
+        .testimonial-item {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .testimonial-item p {
+            font-size: 16px;
+            color: #555;
+            margin: 15px 0;
+        }
+
+        .owl-prev,
+        .owl-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #e7d619;
+        }
+
+        .owl-prev {
+            left: 10px;
+        }
+
+        .owl-next {
+            right: 10px;
+        }
+
+        .back-to-home {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-to-home a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #e7d619;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-to-home a:hover {
+            background-color: #9c9008;
+        }
+    </style>
+</head>
+
+<body class="sub_page">
+
+    <div class="container-xxl">
+        <div class="container">
+            <div class="testimonial-container">
+                <h2>Leave a Testimonial</h2>
+                <div class="testimonial-form">
+                    <form action="{{ url_for('auth.add_testimonial') }}" method="post">
+                        <label for="client_name">Your Name</label>
+                        <input type="text" id="client_name" name="client_name" required>
+
+                        <label for="profession">Profession</label>
+                        <input type="text" id="profession" name="profession" required>
+
+                        <label for="comment">Your Comment</label>
+                        <textarea id="comment" name="comment" rows="3" required></textarea>
+
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+
+                <h1>Our Clients Say!!!</h1>
+                <div class="owl-carousel testimonial-carousel">
+                    {% for testimonial in testimonials %}
+                    <div class="testimonial-item">
+                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
+                        <div>
+                            <h5>{{ testimonial.client_name }} - <small>{{ testimonial.profession }}</small></h5>
+                            <p>{{ testimonial.comment }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="back-to-home">
+                    <a href="{{url_for('views.index')}}">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.testimonial-carousel').owlCarousel({
+                items: 1,
+                loop: true,
+                nav: true,
+                dots: false,
+                autoplay: true,
+                autoplayTimeout: 5000,
+                autoplayHoverPause: true,
+                navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"]
+            });
+        });
+    </script>
+
+</body>
+
+</html>
